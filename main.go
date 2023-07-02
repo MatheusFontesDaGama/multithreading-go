@@ -107,8 +107,12 @@ func main() {
 	go requestApiCep(channelMessage, cep[0])
 	go requestViaCep(channelMessage, cep[0])
 
-	for ch := range channelMessage {
+	select {
+	case ch := <-channelMessage:
 		fmt.Printf("%s: \n", ch.Name)
 		fmt.Println(ch.Payload)
+
+	case <-time.After(time.Second):
+		panic("timeout")
 	}
 }
